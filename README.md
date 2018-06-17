@@ -37,62 +37,51 @@ There's an experimental patch for windows in this [PR](https://github.com/udacit
 
 Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 
-## Editor Settings
+## Reflection
+* Describe the effect each of the P, I, D components had in your implementation.
 
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
+The P, proportional, is the component that causes the car to steer proportional to the error(CTE). This controller will bring large overshoot and cause frequently oscillation. 
 
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
+The D, differential, is the component that reduce the overshotting and oscillation in the prportional part. It can make the car approch the center lane more smoothly.
 
-## Code Style
+The I, integral, is the component that avoid the bias of the system which make car cannot stay on the center lane with only PD controller. This component accumulate the history error and let the controller respond by a stronger action, so the car can approach the center lane faster.
 
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
+*  Describe how the final hyperparameters were chosen.
 
-## Project Instructions and Rubric
+In the project I chose the parameters in two steps, 
 
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
+1. Mannully adjust the parameters to let the car can be on the lane without runing out.
 
-More information is only accessible by people who are already enrolled in Term 2
-of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/f1820894-8322-4bb3-81aa-b26b3c6dcbaf/lessons/e8235395-22dd-4b87-88e0-d108c5e5bbf4/concepts/6a4d8d42-6a04-4aa6-b284-1697c0fd6562)
-for instructions and the project rubric.
+Here is the steps I did in mannul adjust.
 
-## Hints!
+   1) Set Kp, Ki, Kd to be 0.
+   
+   2) Increase Kp to see the car is osillating.
+   
+   3) Increase Ki to agaist some offset.
+   
+   4) Increase Kd to let the system be stable.
+   
+2. Use Twiddle to further optimize the parameters
 
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
+   1) Use Twiddle function in the source code
+   
+   2) Start simulator to let parameters adjusting start
+   
+In the end I got the Kp, Ki, Kd as ``[0.128674, 8.92023e-6, 3.5673]``
 
-## Call for IDE Profiles Pull Requests
+##Simulation
 
-Help your fellow students!
+Here is the simulation of the PID controller, PD controller, ID controller and PI controller.
 
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to we ensure
-that students don't feel pressured to use one IDE or another.
 
-However! I'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
+[PID controller](https://github.com/x327397818/UDC-Term2-project4/blob/master/output/PID.mp4)
 
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
+[PD controller](https://github.com/x327397818/UDC-Term2-project4/blob/master/output/PD.mp4)
 
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
+[ID controller](https://github.com/x327397818/UDC-Term2-project4/blob/master/output/ID.mp4)
 
-Frankly, I've never been involved in a project with multiple IDE profiles
-before. I believe the best way to handle this would be to keep them out of the
-repo root to avoid clutter. My expectation is that most profiles will include
-instructions to copy files to a new location to get picked up by the IDE, but
-that's just a guess.
+[PI controller](https://github.com/x327397818/UDC-Term2-project4/blob/master/output/PI.mp4)
 
-One last note here: regardless of the IDE used, every submitted project must
-still be compilable with cmake and make./
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+As you can see from the videos, only PID and PD controllers can run the whole loop of the track. So P and D component are essencial to make the system stable. And I component is more related to bias eliminating.
 
